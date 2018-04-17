@@ -16,6 +16,6 @@ Now I show you the program on the PHP side on GITHUB.
 
 http://kurodamichiru.sakura.ne.jp/KigaSubscribe.html
  
-レコード、写真集の購入フォームはPHPでFROM SCRRATCHでプログラムを組みました。
+レコード、写真集の購入フォームはPHPでFROM SCRATCHでプログラムを組みました。
 携帯とPCとタブレット、どちらからでもオーダーできます。
 このレポジトリではHTML5,Jquery,CSS(勿論Photoshopでロゴ制作・バナー制作も)で組んだフロント側のサイトの外観とPHP側のビジネスロジック・コードを掲載します。
