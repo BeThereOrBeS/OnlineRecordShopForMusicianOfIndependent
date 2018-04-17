@@ -18,4 +18,6 @@ http://kurodamichiru.sakura.ne.jp/KigaSubscribe.html
  
 レコード、写真集の購入フォームはPHPでFROM SCRRATCHでプログラムを組みました。
 携帯とPCとタブレット、どちらからでもオーダーできます。
-このレポジトリではサイトの外観とPHP側のビジネスロジック・コードを掲載します。
+このレポジトリではHTML5,Jquery,CSS(勿論Photoshopでロゴ制作・バナー制作も)で組んだフロント側のサイトの外観と
+
+PHP側のビジネスロジック・コードを掲載します。
