@@ -13,6 +13,9 @@ Now I show you the program on the PHP side on GITHUB.
 [Japanese transtalion]
 
 インディーズミュージシャンの、アーティスティックなECサイトを制作しました。
+
+http://kurodamichiru.sakura.ne.jp/KigaSubscribe.html
+ 
 レコード、写真集の購入フォームはPHPでFROM SCRRATCHでプログラムを組みました。
 携帯とPCとタブレット、どちらからでもオーダーできます。
 このレポジトリではサイトの外観とPHP側のビジネスロジック・コードを掲載します。
