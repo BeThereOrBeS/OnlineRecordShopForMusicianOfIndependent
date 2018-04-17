@@ -1,0 +1,188 @@
+<?php
+session_start();
+
+require_once('Encode.php');
+
+if (isset($_POST['yourname']) === TRUE) { $_SESSION['yourname'] = $_POST['yourname']; }
+if (isset($_POST['address']) === TRUE) { $_SESSION['address'] = $_POST['address']; }
+if (isset($_POST['zip']) === TRUE) { $_SESSION['zip'] = $_POST['zip']; }
+if (isset($_POST['email']) === TRUE) { $_SESSION['email'] = $_POST['email']; }
+if (isset($_POST['prc']) === TRUE) { $_SESSION['prc'] = $_POST['prc']; }
+if (isset($_POST['opinion']) === TRUE) { $_SESSION['opinion'] = $_POST['opinion']; }
+
+$token = md5(uniqid(mt_rand(), TRUE));
+$_SESSION['token'] = $token;
+
+$file = fopen('default.dat', 'ab');
+
+flock($file, LOCK_EX);
+
+fputs($file, "\t".$_SESSION['yourname']."\t");
+fputs($file, $_SESSION['address']."\t");
+fputs($file, $_SESSION['zip']."\t");
+fputs($file, $_SESSION['email']."\t");
+fputs($file, $_SESSION['prc']."\t");
+fputs($file, $_SESSION['opinion']."\t");
+fputs($file, $token."\n");
+
+$str = mb_convert_encoding((string)$file, "UTF-8");
+fwrite($file, $str);
+flock($file, LOCK_UN);
+fclose($file);
+
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+<title>KIgaSubscribe Comfirm</title>
+
+<style type="text/css">
+
+@media screen and (min-width:300px){
+ dl{
+  font-size : 15px;
+  background-color : #f2f2e6;    
+  margin-bottom : 30px;
+  border-width : 2px;
+  border-style : solid;
+  border-color : #5a5a2e;
+  width: 80%;
+ }
+}
+
+@media screen and (min-width:600px){
+ dl{  
+  background-color : #f2f2e6;    
+  margin-bottom : 30px;
+  border-width : 2px;
+  border-style : solid;
+  border-color : #5a5a2e;
+  width: 350px;
+ }
+}
+
+dt{
+  font-weight : bold;
+  color : #ffffff;
+  background-color :#a73836;
+  padding-left : 4px;
+  text-align : left;
+  margin-bottom : 4px;
+  border-bottom-width : 2px;
+  border-bottom-style : solid;
+  border-bottom-color : #5a5a2e;
+  padding-top : 2px;  
+  padding-bottom : 2px;  
+}
+
+dd{
+  font-size : 85%;
+  line-height : 1.8;
+  margin-right : 4px;
+  padding-right : 2px;     
+  padding-left : 2px;
+  padding-bottom : 4px;  
+}
+</style>
+
+</head>
+<body background="BACK2.jpg">
+<span style="color:#fefefe;"><h3>Confirmation on your order<br>ご注文ありがとうございます。</h3>
+<p>以下の内容で送信致します。</p></span>
+<dl>
+<dt>Your Name(名前)：</dt>
+<dd><?php print(e( $_POST['yourname'])); ?></dd>
+<dt>Your site(住所)：</dt>
+<dd><?php print(e($_POST['address'])); ?></dd>
+<dt>Zip Code(郵便番号)：</dt>
+<dd><?php print(e($_POST['zip'])); ?></dd>
+<dt>E Mail(メールアドレス)：</dt>
+<dd><?php print(e($_POST['email'])); ?></dd>
+
+ <?php
+    $price = array('H Photos' => '980', 'KINO' => '1000',
+      'KURODA EXTRA' => '780');
+ ?>
+
+<dt>Your Order(注文した商品)：</dt>
+
+<dd><?php if (isset($_POST['prc'])) {print(e(implode(',', $_POST['prc'])));} ?></dd>
+
+<dt>Total Price(お値段の合計)：</dt>
+
+<?php
+	$realPrice = '';
+    foreach ((array)$price as $k_pc => $v_pc) {
+      foreach ((array)$_POST['prc'] as $pric) {
+        if ($k_pc === $pric) {$realPrice += $v_pc;}
+      }
+
+    }
+      print('<dd>'.$realPrice.'yen(円)</dd>');
+?>
+
+
+<dt>Free Opinion(自由記入欄)：</dt>
+<dd><?php print(nl2br(e( $_POST['opinion']))); ?></dd>
+
+
+</dl>
+
+    <?php
+    $payment = array('銀行振込', 'Pay pal', 'Cash Registration');
+    ?>
+
+<form method="POST" action="Ksub03.php">
+    <span style="color:#fefefe;">How to pay(支払方法を最後にお選びください)：</span><br>
+    <select id="payment" name="payment">
+    <?php 
+      for ($i = 0; $i < count($payment); $i ++) {
+        print('<option value="'.$i.'::'.$payment[$i].'"');
+        print('>' . $payment[$i] .'</option>');
+      }
+    ?>
+    </select>
+  <input type="hidden" name="token" value="<?php print($token); ?>" />
+  <input type="button" value="REVISION(やりなおす)" onclick="location.href='Ksub02.php'" />
+  <input type="submit" value="SUBMIT(購入を決定)" />
+</form>
+
+<dl>
+<dt>
+KIgaS Bank Account(振込口座)
+</dt>
+<dd>
+Bank Name&Branch(銀行名、支店名);<br />hogehoge銀行　hoge支店
+<hr style="border:dotted;">
+Bank Account You go to check(普通口座);<br />blablabla
+<hr style="border:dotted;">
+Bank Account Name(口座名);blablabla
+</dd>
+<dt>
+Remarks(備考)
+</dt>
+<dd>
+別途振込み手数料は、恐れ入りますがご負担くださいませ。入金確認後、商品を発送いたします。
+（平日15時までのご入金確認となります）
+<br /><br />
+お買い求めいただきました商品を無事にお届けできるよう
+細心の注意を払ってまいります。商品到着まで、どうぞよろしくお願いいたします。
+</dd>
+
+<dt>Cash Registration(現金書留をご利用の場合)</dt>
+<dd><a href="hogehoge01.html" target="_blank">See this page(こちらをご覧下さい)</a></dd>
+
+<dt>How to pay by Paypal(Paypal支払方法)</dt>
+<dd><a href="hogehoge02.html" target="_blank">See this page(こちらをご覧下さい)</a></dd>
+
+<dt>無音企画(MUON RECORD)</dt>
+<dd><a href="mailto:kigamail2000@yahoo.co.jp?subject=Transaction Counter">Mail to Organizer</a></dd>
+</dl>
+
+
+</body>
+</html> 
